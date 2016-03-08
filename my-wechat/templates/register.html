@@ -1,0 +1,9 @@
+{%import "bootstrap/wtf.html" as wtf %}
+{%extends "base.html"%}
+{%block title%}Register - website{%endblock%}
+{%block page%}
+<div class="box" style="width: 800px;margin: 0 auto">
+{{wtf.quick_form(form)}}
+</div>
+</div>
+{%endblock%}

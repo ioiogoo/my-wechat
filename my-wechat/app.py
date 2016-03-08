@@ -8,6 +8,10 @@ import xml.etree.ElementTree as ET
 from  search_lyric import search_lyric
 import time
 import re
+from search_movies import Search_movies
+import base64
+import random
+from thunder_vip_class import Thunder_vip
 
 app=Flask(__name__)
 db=SQLAlchemy(app)
@@ -96,7 +100,7 @@ def wechat():
         Event=xml_recv.find("Event").text
         len(Event)!=0
         if re.match("subscribe",Event):
-            Content="啊欢迎订阅此公众号，随时随地查找歌曲。\n功能介绍：\n1）查询歌词：\n 支持通过歌曲名、歌词或者歌手名查找歌曲，并且可以在线试听 \n例如：需要查找《浏阳河》这首歌的歌词，可以发送：\n CXGC 浏阳河\n CXGC 弯过了几道弯 \n CXGC 沙宝亮 \n查找到《浏阳河》这首歌 \n2）福利查询：\n本订阅号会不定时地给大家发送福利，大家可以通过发送：FLFS（福利放送）查询 \n3）大家如果任何建议请直接发送：JY+内容。如果你有更加好玩的点子，记得告诉我哟\n更多功能还在开发中，敬请期待吧！"
+            Content="欢迎订阅此公众号，随时随地查找歌曲。\n功能介绍：\n1）查询歌词：\n 支持通过歌曲名、歌词或者歌手名查找歌曲，并且可以在线试听 \n例如：需要查找《浏阳河》这首歌的歌词，可以发送：\n CXGC 浏阳河\n CXGC 弯过了几道弯 \n CXGC 沙宝亮 \n查找到《浏阳河》这首歌 \n2）福利查询：\n本订阅号会不定时地给大家发送福利，大家可以通过发送：FLFS（福利放送）查询 \n3）查询电影：\n发送CXDY+电影名即可查询\n4）迅雷会员：XLHY\n5）大家如果任何建议请直接发送：JY+内容。如果你有更加好玩的点子，记得告诉我哟\n更多功能还在开发中，敬请期待吧！"
         #-----------------------判断关注结束
     except:#接受消息
         Content = xml_recv.find("Content").text
@@ -116,8 +120,36 @@ def wechat():
         elif Content[0:4]=="FLFS":
             Content='''敬请期待，谢谢！
             '''
+        elif Content[0:4]=="CXDY":    #判断为“电影查询”
+            try:
+                Content=Content[4:]
+                movie_list=Search_movies(Content).movie_list
+                movie=movie_list[0]
+                download_url_list=movie["download_url"][:3]
+                movie_name=movie["name"]
+                download_url=""
+                for i in download_url_list:
+                    i="thunder://"+base64.b64encode("AA"+i+"ZZ")
+                    i=i[:-2]
+                    download_url=download_url+i+"\n\n"
+                if len(download_url_list)==0:
+                    download_url="只有预告，暂无整片"
+                Content="电影："+movie_name+"\n下载链接:\n"+download_url
+                #Content=movie["download_url"][:3]
+            except:Content="暂无"
+        elif Content[0:4]=="XLHY":    #判断为“迅雷会员”
+            try:
+                Content=Thunder_vip().vip_list
+                list_num=len(Content)
+                num=random.randint(0,list_num)
+                Content=Content[num]
+		try:
+			Content=Content.replace("LOL电影天堂","懒人在线福利无限")
+		except:pass
+            except:
+                Content="获取失败，请稍后再试！"
         else:
-            Content='''请按以下格式发送消息：\n查询歌词：CXGC+空格+内容\n福利发送：FLSF\n更多功能还在开发中。。。'''
+            Content='''请按以下格式发送消息：\n查询歌词：CXGC+空格+内容\n福利发送：FLSF\n查询电影：CXDY+空格+内容\n迅雷会员：XLHY\n更多功能还在开发中。。。'''
     response = make_response( reply % (FromUserName, ToUserName, str(int(time.time())),Content ) )   #回复消息格式
     response.content_type = 'application/xml'
     return response

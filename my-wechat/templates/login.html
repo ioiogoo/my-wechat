@@ -1,0 +1,13 @@
+{%import "bootstrap/wtf.html" as wtf %}
+{%extends "base.html"%}
+{%block title%}Login - website{%endblock%}
+{%block page%}
+<div class="box" style="width: 800px;margin: 0 auto">
+{{wtf.quick_form(form)}}
+{%for message in get_flashed_messages()%}
+<div class="h4">
+    {{message}}
+{% endfor%}
+</div>
+</div>
+{%endblock%}
