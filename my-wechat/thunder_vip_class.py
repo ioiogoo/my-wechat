@@ -7,8 +7,8 @@ class Thunder_vip(object):
     def __init__(self, ):
         web=requests.get("http://www.loldytt.com/xunlei/vip/").content
         soup=BeautifulSoup(web,"html5lib")
-        vipzuoce=soup.find_all("div")[23]
+        vipzuoce=soup.find_all(class_="neirong")[0]
         p=vipzuoce.find_all("p")[0]
-        self.vip_list=str(p)[5:-7].split("<br/>")
+        self.vip_list=str(p).split("<br/>")
 
 print Thunder_vip().vip_list[0]
