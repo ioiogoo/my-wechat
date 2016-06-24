@@ -38,7 +38,7 @@ class Search_movies(object):
             url=movie["url"]
             result=requests.get(url,headers=headers).content
             soup=BeautifulSoup(result,"html5lib")
-            script=soup.find_all("script")[14].text
+            script=soup.find_all("script")[15].text
             #country=soup.find_all("li")[3].text[-3:]
             #date=soup.find_all("li")[4].text[5:]
             movie_name=soup.find_all("h1")[0].text

@@ -3,6 +3,7 @@
 {%block head%}
 {{super()}}
     <link rel="stylesheet" type="text/css" href="{{url_for("static", filename="base.css")}}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{url_for("static", filename= "io_icon.ico")}}">
 {%endblock%}
 
 {%block navbar%}
@@ -60,20 +61,24 @@
 <div id="footer" style="margin-top: 0px">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-md-4 col-md-offset-1">
+        <div class="col-md-3 col-md-offset-1">
           <div class="h2">
             <em>Little About</em>
           </div>
           <p>ioiogoo 新时代三好青年 </p>
           <p>现居于 江苏南通</p>
+          <p>爱生活，爱python </p>
         </div>
-        <div class="col-md-7">
+        <div class="col-md-5">
           <div class="h2">
             <em>Contact me</em>
             </div>
             <p>Email:hefeng1201@qq.com</p>
             <p>Github:<a href="https://github.com/ioiogoo">https://github.com/ioiogoo</a></p>
             <p style="margin-top: -3px;">Copyright ©2016 由 <em>flask </em>强力驱动 Designed and built all by <a href="http://www.ioiogoo.cn">ioiogoo</a></p>
+        </div>
+        <div class="col-md-3">
+          <img src="{{url_for("static", filename= "wechat.jpg")}}" style="width: 120px; height: 120px; margin-top: 20px;">
         </div>
       </div>
     </div>
